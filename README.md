@@ -10,7 +10,7 @@ This project demonstrates a modern test executive used to execute multiple hardw
 
 
 
-> \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*Current Version:\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\* v1.0.0
+> \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*Current Version:\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\* v1.0.0
 
 
 
@@ -22,7 +22,7 @@ This project demonstrates a modern test executive used to execute multiple hardw
 
 
 
-!\[Hardware Test Executive](Screenshots/main\_window.png)
+!\[Hardware Test Executive](Screenshots/main\_window.png.png)
 
 \---
 
