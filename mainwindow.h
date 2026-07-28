@@ -17,6 +17,11 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
 
+
+
+
+
+
 private slots:
     void on_Run_Btn_clicked();
 

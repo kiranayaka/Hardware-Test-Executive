@@ -1,8 +1,11 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "Tests/rs422test.h"
+#include "Tests/testresult.h"
 #include <QDateTime>
 #include <QThread>
 #include <QTimer>
+
 
 
 
@@ -12,12 +15,10 @@ QString cur_time , cur_time2 ;
 float G_PB_Value = 0.0;//Global Progress Bar Value
 int G_pass_Count = 0;//Global Pass Count
 int G_Fail_Count = 0;//Global Fail Count
-QTime T1 , T2 ;//Time 1 , Time 2
-QTime elapsed(0,0);//Time taken / Difference in time
-qint64 diffSeconds =0;   // difference in seconds
-qint64 diffMillis =0;  // difference in milliseconds
-int Num_of_Tests = 0 ;
 
+
+int Num_of_Tests = 0 ;
+//bool result =true;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -36,9 +37,12 @@ void MainWindow::on_Run_Btn_clicked()
     /*----- Cleanups Previous Activities-----*/
     G_PB_Value = 0;
     G_pass_Count =0;
+    G_Fail_Count =0;
     ui->OverallProgress_PB->setValue(G_PB_Value);
     ui->TS_Passed_L->setNum(G_pass_Count);
+    ui->TS_Failed_L->setNum(G_Fail_Count);
     ui->Conn_Status->setText("🟢 Connected");
+
    // ui->PTE_ApplicationLog->clear();
    /*   ui->Conn_Status->setText("🟢 Connected");
 
@@ -50,11 +54,59 @@ void MainWindow::on_Run_Btn_clicked()
         ui->PTE_ApplicationLog->appendPlainText(QString("[%1] Starting test execution...").arg(time));
     */
 
+        TestResult TestResult_Obj;
 
 
         if(ui->RS_422_ChkBox->isChecked())
         {
-            RunRS422Test();
+            RS422Test rs422;
+            ui->Current_Test->setText("RS 422 Test");
+
+            int Row_Count = ui->tableWidgetResults->rowCount();
+            ui->tableWidgetResults->insertRow(Row_Count);
+
+            ui->tableWidgetResults->setItem(Row_Count,0,new QTableWidgetItem("RS422 Test"));
+            ui->tableWidgetResults->setItem(Row_Count,1,new QTableWidgetItem("Running.."));
+            ui->tableWidgetResults->setItem(Row_Count,2,new QTableWidgetItem("..."));
+            ui->tableWidgetResults->setItem(Row_Count,3,new QTableWidgetItem("00:00:00"));
+            ui->tableWidgetResults->setItem(Row_Count,4,new QTableWidgetItem("..."));
+
+            ui->PTE_ApplicationLog->appendPlainText(QString("[%1] Executing RS422 test ").arg(QDateTime::currentDateTime().toString("hh:mm:ss")));
+
+
+            //RunRS422Test();
+            TestResult_Obj = rs422.execute();
+
+            G_PB_Value = G_PB_Value + (100/ Num_of_Tests);
+            ui->OverallProgress_PB->setValue(G_PB_Value);
+
+            ui->tableWidgetResults->setItem(Row_Count,1,new QTableWidgetItem("Completed"));
+            //ui->tableWidgetResults->setItem(Row_Count,3,new QTableWidgetItem(elapsed.toString("hh:mm:ss")));
+            ui->tableWidgetResults->setItem(Row_Count,4,new QTableWidgetItem("None"));
+
+
+            if(TestResult_Obj.Status)
+            {
+                ui->tableWidgetResults->setItem(Row_Count,2,new QTableWidgetItem("🟢 PASS"));//🔴 FAIL
+                ui->PTE_ApplicationLog->appendPlainText(QString("[%1] RS422 Test Passed").arg(QTime::currentTime().toString("hh:mm:ss")));
+                G_pass_Count++;
+                ui->TS_Passed_L->setNum(G_pass_Count);
+            }
+            else
+            {
+                ui->tableWidgetResults->setItem(Row_Count,2,new QTableWidgetItem("🔴 FAIL"));
+                ui->PTE_ApplicationLog->appendPlainText(QString("[%1] RS422 Test Failed").arg(QTime::currentTime().toString("hh:mm:ss")));
+                G_Fail_Count++;
+                ui->TS_Failed_L->setNum(G_Fail_Count);
+            }
+
+            QTime executionTime(0, 0, 0);
+            executionTime = executionTime.addMSecs(TestResult_Obj.executionTimeMs);
+
+            ui->Elapsed_Time->setText(executionTime.toString("hh:mm:ss"));
+            ui->tableWidgetResults->setItem(Row_Count,3,new QTableWidgetItem(executionTime.toString("hh:mm:ss")));
+
+
         }
 
         if(ui->Memory_ChkBox->isChecked())
@@ -86,7 +138,7 @@ void MainWindow::on_Run_Btn_clicked()
 
 void MainWindow::RunRS422Test()
 {
-    T1 = QTime::currentTime();
+
     ui->Current_Test->setText("RS 422 Test");
 
     cur_time = QDateTime::currentDateTime().toString("hh:mm:ss");
@@ -103,14 +155,9 @@ void MainWindow::RunRS422Test()
     ui->PTE_ApplicationLog->appendPlainText(QString("[%1] Executing RS422 test ").arg(cur_time));
 
     // Let the UI update, then schedule the completion after 2 seconds
-    QTimer::singleShot(2000, this, [=]() {
-        T2 = QTime::currentTime();
-        int diffSeconds = T1.secsTo(T2);
-        int diffMillis  = T1.msecsTo(T2);
-
+    QTimer::singleShot(2000, this, [=]()
+    {
         QTime elapsed(0,0);
-        elapsed = elapsed.addSecs(diffSeconds).addMSecs(diffMillis);
-
 
         G_PB_Value = G_PB_Value + (100/ Num_of_Tests);
         ui->OverallProgress_PB->setValue(G_PB_Value);
@@ -131,7 +178,7 @@ void MainWindow::RunRS422Test()
 
 void MainWindow::RunMemoryTest()
 {
-    T1 = QTime::currentTime();
+
     ui->Current_Test->setText("Memory Test");
 
     cur_time = QDateTime::currentDateTime().toString("hh:mm:ss");
@@ -148,12 +195,10 @@ void MainWindow::RunMemoryTest()
 
     // Let the UI update, then schedule the completion after 2 seconds
     QTimer::singleShot(2000, this, [=]() {
-        T2 = QTime::currentTime();
-        int diffSeconds = T1.secsTo(T2);
-        int diffMillis  = T1.msecsTo(T2);
+
 
         QTime elapsed(0,0);
-        elapsed = elapsed.addSecs(diffSeconds).addMSecs(diffMillis);
+       // elapsed = elapsed.addSecs(diffSeconds).addMSecs(diffMillis);
 
 
         G_PB_Value = G_PB_Value + (100/ Num_of_Tests);
@@ -175,7 +220,7 @@ void MainWindow::RunMemoryTest()
 void MainWindow::RunEthernetTest()
 {
 
-    T1 = QTime::currentTime();
+   // T1 = QTime::currentTime();
     ui->Current_Test->setText("Ethernet Test");
 
     cur_time = QDateTime::currentDateTime().toString("hh:mm:ss");
@@ -192,12 +237,8 @@ void MainWindow::RunEthernetTest()
 
     // Let the UI update, then schedule the completion after 2 seconds
     QTimer::singleShot(2000, this, [=]() {
-        T2 = QTime::currentTime();
-        int diffSeconds = T1.secsTo(T2);
-        int diffMillis  = T1.msecsTo(T2);
 
         QTime elapsed(0,0);
-        elapsed = elapsed.addSecs(diffSeconds).addMSecs(diffMillis);
 
 
         G_PB_Value = G_PB_Value + (100/ Num_of_Tests);
@@ -219,7 +260,7 @@ void MainWindow::RunEthernetTest()
 
 void MainWindow::RunGPIOTest()
 {
-    T1 = QTime::currentTime();
+
     ui->Current_Test->setText("GPIO Test");
 
     cur_time = QDateTime::currentDateTime().toString("hh:mm:ss");
@@ -236,12 +277,9 @@ void MainWindow::RunGPIOTest()
 
     // Let the UI update, then schedule the completion after 2 seconds
     QTimer::singleShot(2000, this, [=]() {
-        T2 = QTime::currentTime();
-        int diffSeconds = T1.secsTo(T2);
-        int diffMillis  = T1.msecsTo(T2);
+
 
         QTime elapsed(0,0);
-        elapsed = elapsed.addSecs(diffSeconds).addMSecs(diffMillis);
 
 
         G_PB_Value = G_PB_Value + (100/ Num_of_Tests);
@@ -262,7 +300,7 @@ void MainWindow::RunGPIOTest()
 
 void MainWindow::RunADCTest()
 {
-    T1 = QTime::currentTime();
+
     ui->Current_Test->setText("ADC Test");
 
     cur_time = QDateTime::currentDateTime().toString("hh:mm:ss");
@@ -279,13 +317,8 @@ void MainWindow::RunADCTest()
 
     // Let the UI update, then schedule the completion after 2 seconds
     QTimer::singleShot(2000, this, [=]() {
-        T2 = QTime::currentTime();
-        int diffSeconds = T1.secsTo(T2);
-        int diffMillis  = T1.msecsTo(T2);
 
         QTime elapsed(0,0);
-        elapsed = elapsed.addSecs(diffSeconds).addMSecs(diffMillis);
-
 
         G_PB_Value = G_PB_Value + (100/ Num_of_Tests);
         ui->OverallProgress_PB->setValue(G_PB_Value);

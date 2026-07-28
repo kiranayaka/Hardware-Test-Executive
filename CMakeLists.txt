@@ -11,7 +11,13 @@ qt_add_executable(HardwareTestExecutive
     mainwindow.cpp
     mainwindow.h
     mainwindow.ui
-    testmanager.h testmanager.cpp
+
+    Tests/basetest.h Tests/basetest.cpp
+    Tests/rs422test.h Tests/rs422test.cpp
+    Tests/cmemorytest.h Tests/cmemorytest.cpp
+    Managers/CTestmanager.h Managers/CTestmanager.cpp
+    Utilities/CLogger.h Utilities/CLogger.cpp
+    Tests/testresult.h
 )
 
 target_link_libraries(HardwareTestExecutive
