@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "Tests/testresult.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -44,5 +45,9 @@ private:
     void RunEthernetTest();
     void RunGPIOTest();
     void RunADCTest();
+
+    void UpdateTestUI(const QString& testName,
+                      const TestResult& result,
+                      int row);
 };
 #endif // MAINWINDOW_H

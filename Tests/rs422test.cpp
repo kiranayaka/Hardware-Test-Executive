@@ -17,12 +17,11 @@ TestResult RS422Test::execute()
     // Send packet
     // Receive packet
     // Process response
-    timer.start();
+
 
     // Simulate hardware communication
     QThread::msleep(2000);
 
-    result.executionTimeMs = timer.elapsed();
 
 
     result.Status = true;

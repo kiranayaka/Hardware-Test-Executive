@@ -1,11 +1,13 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "Tests/rs422test.h"
 #include "Tests/testresult.h"
 #include <QDateTime>
 #include <QThread>
 #include <QTimer>
 
+#include "Tests/rs422test.h"
+#include "Tests/cmemorytest.h"
+#include "Tests/cethernet.h"
 
 
 
@@ -43,16 +45,7 @@ void MainWindow::on_Run_Btn_clicked()
     ui->TS_Failed_L->setNum(G_Fail_Count);
     ui->Conn_Status->setText("🟢 Connected");
 
-   // ui->PTE_ApplicationLog->clear();
-   /*   ui->Conn_Status->setText("🟢 Connected");
 
-        ui->Current_Test->setText("RS422 Loopback");
-
-        ui->OverallProgress_PB->setValue(10);
-
-        QString time = QDateTime::currentDateTime().toString("hh:mm:ss");
-        ui->PTE_ApplicationLog->appendPlainText(QString("[%1] Starting test execution...").arg(time));
-    */
 
         TestResult TestResult_Obj;
 
@@ -65,58 +58,52 @@ void MainWindow::on_Run_Btn_clicked()
             int Row_Count = ui->tableWidgetResults->rowCount();
             ui->tableWidgetResults->insertRow(Row_Count);
 
-            ui->tableWidgetResults->setItem(Row_Count,0,new QTableWidgetItem("RS422 Test"));
-            ui->tableWidgetResults->setItem(Row_Count,1,new QTableWidgetItem("Running.."));
-            ui->tableWidgetResults->setItem(Row_Count,2,new QTableWidgetItem("..."));
-            ui->tableWidgetResults->setItem(Row_Count,3,new QTableWidgetItem("00:00:00"));
-            ui->tableWidgetResults->setItem(Row_Count,4,new QTableWidgetItem("..."));
-
             ui->PTE_ApplicationLog->appendPlainText(QString("[%1] Executing RS422 test ").arg(QDateTime::currentDateTime().toString("hh:mm:ss")));
-
-
-            //RunRS422Test();
-            TestResult_Obj = rs422.execute();
 
             G_PB_Value = G_PB_Value + (100/ Num_of_Tests);
             ui->OverallProgress_PB->setValue(G_PB_Value);
 
-            ui->tableWidgetResults->setItem(Row_Count,1,new QTableWidgetItem("Completed"));
-            //ui->tableWidgetResults->setItem(Row_Count,3,new QTableWidgetItem(elapsed.toString("hh:mm:ss")));
-            ui->tableWidgetResults->setItem(Row_Count,4,new QTableWidgetItem("None"));
+            //RunRS422Test();
+            TestResult_Obj = rs422.execute();
 
-
-            if(TestResult_Obj.Status)
-            {
-                ui->tableWidgetResults->setItem(Row_Count,2,new QTableWidgetItem("🟢 PASS"));//🔴 FAIL
-                ui->PTE_ApplicationLog->appendPlainText(QString("[%1] RS422 Test Passed").arg(QTime::currentTime().toString("hh:mm:ss")));
-                G_pass_Count++;
-                ui->TS_Passed_L->setNum(G_pass_Count);
-            }
-            else
-            {
-                ui->tableWidgetResults->setItem(Row_Count,2,new QTableWidgetItem("🔴 FAIL"));
-                ui->PTE_ApplicationLog->appendPlainText(QString("[%1] RS422 Test Failed").arg(QTime::currentTime().toString("hh:mm:ss")));
-                G_Fail_Count++;
-                ui->TS_Failed_L->setNum(G_Fail_Count);
-            }
-
-            QTime executionTime(0, 0, 0);
-            executionTime = executionTime.addMSecs(TestResult_Obj.executionTimeMs);
-
-            ui->Elapsed_Time->setText(executionTime.toString("hh:mm:ss"));
-            ui->tableWidgetResults->setItem(Row_Count,3,new QTableWidgetItem(executionTime.toString("hh:mm:ss")));
-
+            UpdateTestUI("RS422 Test", TestResult_Obj, Row_Count);
 
         }
 
         if(ui->Memory_ChkBox->isChecked())
         {
-            RunMemoryTest();
+            CMemorytest cmemorytest_Obj;
+            ui->Current_Test->setText("Memory Test");
+
+            int Row_Count = ui->tableWidgetResults->rowCount();
+            ui->tableWidgetResults->insertRow(Row_Count);
+
+            ui->PTE_ApplicationLog->appendPlainText(QString("[%1] Executing Memory test ").arg(QDateTime::currentDateTime().toString("hh:mm:ss")));
+
+            G_PB_Value = G_PB_Value + (100/ Num_of_Tests);
+            ui->OverallProgress_PB->setValue(G_PB_Value);
+
+            TestResult_Obj = cmemorytest_Obj.execute();
+
+            UpdateTestUI("Memory Test", TestResult_Obj, Row_Count);
         }
 
         if(ui->Ethernet_ChkBox->isChecked())
         {
-            RunEthernetTest();
+            CEthernet CEthernet_obj;
+            ui->Current_Test->setText("Ethernet Test");
+
+            int Row_Count = ui->tableWidgetResults->rowCount();
+            ui->tableWidgetResults->insertRow(Row_Count);
+
+            ui->PTE_ApplicationLog->appendPlainText(QString("[%1] Executing Ethernet test ").arg(QDateTime::currentDateTime().toString("hh:mm:ss")));
+
+            G_PB_Value = G_PB_Value + (100/ Num_of_Tests);
+            ui->OverallProgress_PB->setValue(G_PB_Value);
+
+            TestResult_Obj = CEthernet_obj.execute();
+
+            UpdateTestUI("Ethernet Test", TestResult_Obj, Row_Count);
         }
 
         if(ui->GPIO_ChkBox->isChecked())
@@ -134,7 +121,45 @@ void MainWindow::on_Run_Btn_clicked()
         G_pass_Count = 0;
 }
 
+void MainWindow::UpdateTestUI(const QString& testName,const TestResult& result,int row)
+{
+    ui->tableWidgetResults->setItem(row,0,new QTableWidgetItem(QString("%1").arg(testName)));
+    ui->tableWidgetResults->setItem(row,1,new QTableWidgetItem("Completed"));
 
+    if(result.Status)
+    {
+        ui->tableWidgetResults->setItem(row,2,new QTableWidgetItem("🟢 PASS"));
+
+        G_pass_Count++;
+        ui->TS_Passed_L->setNum(G_pass_Count);
+
+        ui->PTE_ApplicationLog->appendPlainText(QString("[%1] %2 Passed")
+                .arg(QTime::currentTime().toString("hh:mm:ss"))
+                .arg(testName));
+    }
+    else
+    {
+        ui->tableWidgetResults->setItem(row,2,new QTableWidgetItem("🔴 FAIL"));
+
+        G_Fail_Count++;
+        ui->TS_Failed_L->setNum(G_Fail_Count);
+
+        ui->PTE_ApplicationLog->appendPlainText(
+            QString("[%1] %2 Failed")
+                .arg(QTime::currentTime().toString("hh:mm:ss"))
+                .arg(testName));
+    }
+
+    QTime time(0,0,0);
+    time = time.addMSecs(result.executionTimeMs);
+
+    ui->tableWidgetResults->setItem(row,3,new QTableWidgetItem(time.toString("hh:mm:ss")));
+
+    ui->Elapsed_Time->setText(time.toString("hh:mm:ss"));
+
+    ui->tableWidgetResults->setItem(row,4,new QTableWidgetItem(result.failReason));
+
+}
 
 void MainWindow::RunRS422Test()
 {
@@ -349,6 +374,10 @@ void MainWindow::on_RS_422_ChkBox_stateChanged(int arg1)
     {
         Num_of_Tests ++;
     }
+    else
+    {
+        Num_of_Tests --;
+    }
 
 }
 
@@ -359,6 +388,10 @@ void MainWindow::on_Memory_ChkBox_stateChanged(int arg1)
     {
         Num_of_Tests ++;
     }
+    else
+    {
+        Num_of_Tests --;
+    }
 }
 
 
@@ -367,6 +400,10 @@ void MainWindow::on_Ethernet_ChkBox_stateChanged(int arg1)
     if(ui->Ethernet_ChkBox->isChecked()== true)
     {
         Num_of_Tests ++;
+    }
+    else
+    {
+        Num_of_Tests --;
     }
 }
 
@@ -377,6 +414,10 @@ void MainWindow::on_GPIO_ChkBox_stateChanged(int arg1)
     {
         Num_of_Tests ++;
     }
+    else
+    {
+        Num_of_Tests --;
+    }
 }
 
 
@@ -385,6 +426,10 @@ void MainWindow::on_ADC_ChkBox_stateChanged(int arg1)
     if(ui->ADC_ChkBox->isChecked()== true)
     {
         Num_of_Tests ++;
+    }
+    else
+    {
+        Num_of_Tests --;
     }
 }
 

@@ -18,6 +18,7 @@ qt_add_executable(HardwareTestExecutive
     Managers/CTestmanager.h Managers/CTestmanager.cpp
     Utilities/CLogger.h Utilities/CLogger.cpp
     Tests/testresult.h
+    Tests/cethernet.h Tests/cethernet.cpp
 )
 
 target_link_libraries(HardwareTestExecutive
