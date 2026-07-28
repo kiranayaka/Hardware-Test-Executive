@@ -260,5 +260,16 @@ This project is developed as a personal learning project to improve modern C++ a
 Future versions will simulate real hardware communication, packet transmission, automated testing, and report generation.
 
 ---
+# 📌 Version History
 
+| Version | Description |
+|----------|-------------|
+| **v2.0.0** | Introduced modular architecture using BaseTest, polymorphism, reusable TestResult, and dynamic test execution. |
+| **v1.0.0** | Initial Hardware Test Executive prototype with Qt Widgets UI and basic simulated hardware tests. |
+
+![Qt](https://img.shields.io/badge/Qt-6-green)
+![C++](https://img.shields.io/badge/C%2B%2B-17-blue)
+![CMake](https://img.shields.io/badge/CMake-Build-red)
+![GitHub](https://img.shields.io/badge/GitHub-Versioned-black)
+![License](https://img.shields.io/badge/License-MIT-yellow)
 ## ⭐ If you like this project, consider giving it a Star!
