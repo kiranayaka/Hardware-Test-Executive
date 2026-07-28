@@ -1,9 +1,7 @@
 #include "basetest.h"
 
-basetest::basetest() {}
 
-
-basetest::basetest(QString name)
+basetest::basetest(const QString& name)
 {
     m_testName = name;
 }

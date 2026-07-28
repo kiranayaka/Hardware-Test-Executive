@@ -4,7 +4,7 @@
 #include "basetest.h"
 #include "testresult.h"
 
-class RS422Test
+class RS422Test : public basetest
 {
 public:
     RS422Test();

@@ -5,7 +5,10 @@
 #include <QElapsedTimer>
 #include <QThread>
 
-CMemorytest::CMemorytest() {}
+CMemorytest::CMemorytest(): basetest("Memory Test")
+{
+
+}
 
 
 TestResult CMemorytest::execute()

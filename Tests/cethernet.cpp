@@ -5,7 +5,8 @@
 #include <QElapsedTimer>
 #include <QThread>
 
-CEthernet::CEthernet() {}
+CEthernet::CEthernet(): basetest("Ethernet Test")
+{}
 
 
 

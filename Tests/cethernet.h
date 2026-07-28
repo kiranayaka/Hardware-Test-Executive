@@ -2,8 +2,9 @@
 #define CETHERNET_H
 
 #include "testresult.h"
+#include "basetest.h"
 
-class CEthernet
+class CEthernet : public basetest
 {
 public:
     CEthernet();

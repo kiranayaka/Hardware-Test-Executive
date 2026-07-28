@@ -3,8 +3,9 @@
 
 
 #include "testresult.h"
+#include "basetest.h"
 
-class CMemorytest
+class CMemorytest : public basetest
 {
 public:
     CMemorytest();

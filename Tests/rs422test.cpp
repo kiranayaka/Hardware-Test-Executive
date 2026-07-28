@@ -5,8 +5,9 @@
 #include <QThread>
 
 
-RS422Test::RS422Test() //: basetest("RS422 Test")
+RS422Test::RS422Test()  : basetest("RS422 Test")
 {
+
 }
 
 TestResult RS422Test::execute()
