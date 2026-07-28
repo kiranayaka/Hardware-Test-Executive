@@ -10,7 +10,7 @@ This project demonstrates a modern test executive used to execute multiple hardw
 
 
 
-\*\*Current Version:\*\* v1.0.0
+\*\* Version:\*\* v1.0.0
 
 \---
 
@@ -23,7 +23,15 @@ This project demonstrates a modern test executive used to execute multiple hardw
 !\[Hardware Test Executive](Screenshots/main\_window.png)
 
 \---
+## Current Version 2.0 Features
 
+- Modular Hardware Test Framework
+- Abstract BaseTest interface
+- Polymorphic execution of hardware tests
+- Common TestResult structure
+- Dynamic test selection
+- Reusable UI update mechanism
+- Qt Widgets based desktop application
 
 
 \## About the Project
