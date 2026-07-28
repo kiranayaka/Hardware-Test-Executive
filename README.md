@@ -1,196 +1,264 @@
-\# Hardware Test Executive (Qt 6 + C++)
+# 🚀 Hardware Test Executive
 
+A professional **Qt (C++) desktop application** that simulates a Hardware Test Executive used for testing embedded hardware modules.
 
+This project is inspired by real-world Aerospace and Defense test applications where a host PC communicates with embedded hardware to execute diagnostics and display test results.
 
-A professional desktop application developed using \*\*Qt 6\*\* and \*\*C++\*\* for simulating hardware diagnostics and automated test execution.
+---
 
+## 📷 Application Screenshot
 
+![Hardware Test Executive](Screenshots/MainWindow.png)
 
-This project demonstrates a modern test executive used to execute multiple hardware tests, monitor execution progress, display real-time logs, and generate structured test results through an intuitive graphical user interface.
+---
 
+# Features
 
+- ✅ Modern Qt Widgets based GUI
+- ✅ Select multiple hardware tests
+- ✅ Execute selected tests dynamically
+- ✅ Real-time Application Log
+- ✅ Test Results Table
+- ✅ Overall Progress Bar
+- ✅ Pass / Fail Statistics
+- ✅ Execution Time Display
+- ✅ Object-Oriented Design
+- ✅ Modular Test Architecture
 
-\*\* Version:\*\* v1.0.0
+---
 
-\---
+# Current Implemented Tests
 
+- RS422 Test
+- Memory Test
+- Ethernet Test
+- GPIO Test *(Architecture Ready)*
+- ADC Test *(Architecture Ready)*
 
+---
 
-\## Application Screenshot
+# Technologies Used
 
+- C++
+- Qt 6
+- Qt Widgets
+- CMake
+- Object-Oriented Programming
+- Git
+- GitHub
 
+---
 
-!\[Hardware Test Executive](Screenshots/main\_window.png)
+# Software Architecture
 
-\---
-## Current Version 2.0 Features
-
-- Modular Hardware Test Framework
-- Abstract BaseTest interface
-- Polymorphic execution of hardware tests
-- Common TestResult structure
-- Dynamic test selection
-- Reusable UI update mechanism
-- Qt Widgets based desktop application
-
-
-\## About the Project
-
-
-
-Hardware Test Executive is a desktop application that simulates the workflow of a professional hardware validation tool used in embedded systems, aerospace, automotive, and industrial automation.
-
-
-
-The application allows users to:
-
-
-
-\- Select multiple hardware tests
-
-\- Execute selected tests
-
-\- Monitor execution progress
-
-\- View real-time application logs
-
-\- Display structured test results
-
-\- View execution summary
-
-\- Simulate hardware diagnostics using Qt timers
-
-
-
-\---
-
-
-
-\## Technology Stack
-
-
-
-| Category | Technology |
-
-|----------|------------|
-
-| Language | C++ |
-
-| Framework | Qt 6 |
-
-| IDE | Qt Creator |
-
-| Build System | CMake |
-
-| UI Design | Qt Designer |
-
-| Version Control | Git |
-
-| Repository | GitHub |
-
-
-
-\---
-
-
-
-\## Project Structure
-
-
-
-```text
-
-HardwareTestExecutive/
-
-│
-
-├── main.cpp
-
-├── mainwindow.h
-
-├── mainwindow.cpp
-
-├── mainwindow.ui
-
-├── CMakeLists.txt
-
-├── README.md
-
-└── screenshots/
+The project follows a modular architecture based on **Abstraction**, **Inheritance**, and **Polymorphism**.
 
 ```
+                 MainWindow
+                      │
+                      ▼
+             QVector<BaseTest *>
+                      │
+      ┌───────────────┼────────────────┐
+      ▼               ▼                ▼
+  RS422Test      MemoryTest      EthernetTest
+                      │
+                GPIOTest
+                      │
+                  ADCTest
+```
 
+Each hardware test inherits from the abstract `BaseTest` class and implements its own execution logic.
 
+---
 
-\---
+# Class Responsibilities
 
+## BaseTest
 
+Abstract interface shared by every hardware test.
 
-\## Build Instructions
+Responsible for:
 
+- Providing a common interface
+- Returning TestResult
+- Maintaining test name
 
+---
 
-\### Prerequisites
+## Derived Test Classes
 
+Each hardware test is implemented as its own class.
 
+Examples:
 
-\- Qt 6.x
+- RS422Test
+- MemoryTest
+- EthernetTest
+- GPIOTest
+- ADCTest
 
-\- Qt Creator
+Each class overrides:
 
-\- CMake 3.16 or later
+```cpp
+TestResult execute();
+```
 
-\- C++17 compatible compiler
+---
 
+## TestResult
 
+A common structure used by every test.
 
-\### Build Steps
+Contains:
 
+- Status
+- Execution Time
+- Failure Reason
 
+---
 
-1\. Clone the repository
+## MainWindow
 
+Responsible only for GUI operations.
 
+- Test Selection
+- Progress Bar
+- Results Table
+- Application Log
+- Pass/Fail Statistics
+
+Business logic is separated from the UI.
+
+---
+
+# Execution Flow
+
+```
+User Selects Tests
+        │
+        ▼
+Create Test Objects
+        │
+        ▼
+Store in QVector<BaseTest *>
+        │
+        ▼
+Execute Each Test
+        │
+        ▼
+Receive TestResult
+        │
+        ▼
+Update GUI
+```
+
+---
+
+# Example Output
+
+| Test | Status | Time | Failure Reason |
+|------|--------|------|----------------|
+| RS422 Test | 🟢 PASS | 00:00:02 | None |
+| Memory Test | 🟢 PASS | 00:00:01 | None |
+| Ethernet Test | 🔴 FAIL | 00:00:03 | Timeout |
+
+---
+
+# Learning Objectives
+
+This project demonstrates:
+
+- Qt Widgets Development
+- Object-Oriented Programming
+- Abstract Classes
+- Virtual Functions
+- Inheritance
+- Polymorphism
+- Modular Software Design
+- GUI Programming
+- Dynamic Object Creation
+- Memory Management
+- Git Version Control
+
+---
+
+# Project Structure
+
+```
+HardwareTestExecutive/
+│
+├── MainWindow
+│
+├── Tests/
+│   ├── BaseTest
+│   ├── TestResult
+│   ├── RS422Test
+│   ├── MemoryTest
+│   ├── EthernetTest
+│
+├── Screenshots/
+│
+├── CMakeLists.txt
+│
+└── README.md
+```
+
+---
+
+# Current Version
+
+## ✅ Version 2.0.0
+
+### Highlights
+
+- Introduced abstract `BaseTest`
+- Added polymorphic test execution
+- Common `TestResult` structure
+- Dynamic execution using `QVector<BaseTest*>`
+- Shared UI update function
+- Modular architecture
+- Improved code reusability
+- Reduced duplicate code
+
+---
+
+# Roadmap
+
+## Version 3.0
+
+- Test Manager
+- Packet Builder
+- Packet Parser
+- Simulated RS422 Communication
+- Export Test Report (PDF)
+- Test Configuration using JSON
+- Test Statistics Dashboard
+
+---
+
+# Build
+
+Clone the repository
 
 ```bash
-
 git clone https://github.com/kiranayaka/Hardware-Test-Executive.git
-
 ```
 
+Open using **Qt Creator**.
 
+Configure using **CMake**.
 
-2\. Open the project in Qt Creator.
+Build and Run.
 
+---
 
+# About
 
-3\. Configure the project using CMake.
+This project is developed as a personal learning project to improve modern C++ and Qt skills while following software architecture practices commonly used in Hardware Test Executive applications.
 
+Future versions will simulate real hardware communication, packet transmission, automated testing, and report generation.
 
+---
 
-4\. Build and Run the application.
-
-
-
-
-
-\---
-
-
-
-\## Author
-
-
-
-\*\*Kiran R\*\*
-
-
-
-Software Engineer | C++ | Qt | Windows Desktop Applications | Hardware Communication
-
-
-
-\- GitHub: https://github.com/kiranayaka
-
-\- LinkedIn: https://www.linkedin.com/in/kiran-r-856893218/
-
+## ⭐ If you like this project, consider giving it a Star!
