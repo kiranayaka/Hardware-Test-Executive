@@ -8,7 +8,7 @@ This project is inspired by real-world Aerospace and Defense test applications w
 
 ## 📷 Application Screenshot
 
-![Hardware Test Executive](Screenshots/MainWindow.png)
+![Hardware Test Executive](Screenshots/Main_Window.png)
 
 ---
 
