@@ -36,6 +36,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_Run_Btn_clicked()
 {
+
+    ui->Conn_Status->setText("🟢 Connected");
     /*cleanup Previous Activities*/
     {
         G_PB_Value = 0.0;

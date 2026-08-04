@@ -5,6 +5,9 @@
 
 #include "testresult.h"
 
+#include <QSerialPort>
+#include <QSerialPortInfo>
+
 class basetest
 {
     public:
@@ -13,6 +16,8 @@ class basetest
     QString getTestName() const;
 
     virtual TestResult execute() = 0;
+
+  //   = send_Packet( )
 
     protected:
     QString m_testName;

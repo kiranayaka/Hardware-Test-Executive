@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.19)
 project(HardwareTestExecutive LANGUAGES CXX)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets)
+
+find_package(Qt6 REQUIRED COMPONENTS Widgets SerialPort)
 
 qt_standard_project_setup()
 
@@ -19,14 +20,23 @@ qt_add_executable(HardwareTestExecutive
     Utilities/CLogger.h Utilities/CLogger.cpp
     Tests/testresult.h
     Tests/cethernet.h Tests/cethernet.cpp
+    Communication/communicationmanager.h Communication/communicationmanager.cpp
+
+
+
 )
 
 target_link_libraries(HardwareTestExecutive
     PRIVATE
         Qt::Core
         Qt::Widgets
+        Qt::SerialPort
 )
-
+find_package(Qt6 REQUIRED COMPONENTS
+    Core
+    Widgets
+    SerialPort
+)
 install(TARGETS HardwareTestExecutive
     BUNDLE  DESTINATION .
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}

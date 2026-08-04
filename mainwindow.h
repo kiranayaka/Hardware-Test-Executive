@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "Tests/testresult.h"
 
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
